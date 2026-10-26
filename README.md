@@ -5,6 +5,8 @@ Read, replace, or clear the system prompts compiled into `opencode.exe`.
 - **Custom prompt** — swap a model's built-in instructions for your own.
 - **Clear the prompt** — blank it out so fewer tokens go into every request. Useful if you only want your own `AGENTS.md` instructions.
 
+![Opencode-SystemPrompt manager](screenshot.png)
+
 > [!WARNING]
 > This tool edits a program made by someone else.
 >
