@@ -1,0 +1,18 @@
+# The binary this tool edits - never commit it
+opencode.exe
+
+# Backups contain full copies of the exe
+backups/
+
+# Build output
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+
+# Local state and scratch files
+regions.json
+rea_out/
+chunk_*.js
+*.bak
