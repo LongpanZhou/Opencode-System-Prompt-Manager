@@ -7,6 +7,8 @@ Read, replace, or clear the system prompts compiled into `opencode.exe`.
 
 ![Opencode-SystemPrompt manager](screenshot.png)
 
+**[Download the latest release](https://github.com/LongpanZhou/Opencode-System-Prompt-Manager/releases/latest)** — Windows x64, self-contained.
+
 > [!WARNING]
 > This tool edits a program made by someone else.
 >
