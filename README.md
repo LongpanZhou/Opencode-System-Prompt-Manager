@@ -25,7 +25,7 @@ Read, replace, or clear the system prompts compiled into `opencode.exe`.
 > [!IMPORTANT]
 > **Copy your own `opencode.exe` into this folder and use that copy.**
 >
-> The app looks for `opencode.exe` next to itself first, so the installed one under `%APPDATA%\npm\...` is never touched. Keep the original somewhere safe.
+> The app looks for `opencode.exe` next to itself first, so experiments normally never touch the installed one under `%APPDATA%\npm\...`. If no copy sits next to the app, though, it edits the installed exe directly — keep a copy in this folder.
 
 ## Quick start
 
@@ -33,14 +33,21 @@ Read, replace, or clear the system prompts compiled into `opencode.exe`.
 1. Copy opencode.exe into this folder
 2. Run OpenCode Prompt Manager.exe
 3. Pick a prompt, then use the buttons below
+4. Happy with it? Use **Apply to installed** so real `opencode` runs use it too
 ```
+
+## Which file gets changed?
+
+The app edits the file shown in **OpenCode file** — by default your copy in this folder; the installed exe under `%APPDATA%\npm\...` is only touched by **Apply to installed** (or if you point the app at it yourself).
+
+There is no separate "bun server" behind OpenCode: `opencode.exe` is a single Bun executable with everything bundled inside, prompts included. Whatever exe actually runs is the one whose prompts are used — so changes only take effect in real runs once they are in that exe. Keep your edited copy here as the source of truth: an npm update replaces the installed exe with a fresh, unmodified one, and **Apply to installed** puts your version back.
 
 ## Tabs
 
 | Tab | Contents |
 |---|---|
 | **Prompts** | Every prompt found in the file, with its embedded path, size, and preview |
-| **Model prompts** | Which prompt each model family receives (default, GPT, Kimi, Meta, Trinity, Claude) — double-click a row to copy its embedded path |
+| **Model prompts** | Which prompt each model family receives (default, GPT, Kimi, Meta, Trinity, Claude). The **Stored prompt** column names the very same prompt you see in the Prompts tab — clearing a row clears those same bytes. Double-click copies the embedded path; right-click jumps to the prompt. |
 
 ## Buttons
 
@@ -49,8 +56,19 @@ Read, replace, or clear the system prompts compiled into `opencode.exe`.
 | **Dump prompts** | Saves every prompt as `.txt` into `backups\manual-<time>\` |
 | **Replace selected** | Replaces the selected prompt with a text file you choose |
 | **Clear selected** | Blanks the selected prompt |
-| **Restore selected** | Puts the last saved version of that one prompt back |
-| **Restore all** | Puts the whole exe back to the last saved backup |
+| **Restore selected** | Puts that one prompt back to its original text |
+| **Restore all** | Puts the whole exe back to the original copy |
+
+Both preview boxes are **editable** — type or paste a message, then press **Save** (or Ctrl+S) next to the box to write it back into the exe. Copying works the same way as before: select text (or press Ctrl+A), then Ctrl+C or right-click → Copy.
+
+## The original backup
+
+Restore never goes back to "the last change" — it always restores the **true original**:
+
+- `backups\dump-original\` — every prompt exactly as it was before the first change.
+- `backups\opencode-original.exe` — the untouched exe.
+
+Both are written the first time the app changes a file that is still unmodified, and they are refreshed if you load a different (fresh) build. If they do not exist yet but older `backups\dump-*` / `opencode-*.exe` copies do, the oldest of them is adopted as the original — only when its prompt layout matches the loaded file.
 
 ## How OpenCode uses these prompts
 
@@ -81,7 +99,9 @@ tools:    tool definitions
 ## Limits
 
 > [!NOTE]
-> - A replacement must **fit in the space the original used**. The app tells you if it is too long — shorten it.
+> - A replacement must **fit in the space the original used**. The app tells you if it is too long — shorten it. Anything shorter is fine: the leftover space is padded with blanks, and the preview and copies show your text without that padding.
+> - Type directly in the preview boxes and press **Save** to write your message back; no separate text file needed.
+> - Need a much longer prompt? OpenCode ignores the embedded prompt entirely when an agent sets `system` in `opencode.jsonc` — no length limit that way.
 > - Every change saves a full copy of the exe plus a text dump under `backups\` first.
 > - OpenCode must be closed while changing the file.
 
@@ -91,5 +111,9 @@ tools:    tool definitions
 ocprompt.pyw                  source
 OpenCode Prompt Manager.exe   the app
 regions.json                  cached prompt locations for the loaded exe
-backups\                      automatic backups and dumps
+backups\dump-original\        the true original prompt texts
+backups\opencode-original.exe the untouched exe copy
+backups\original.json         which build the original pair belongs to
+backups\dump-<time>\          text dump taken right before each change
+backups\opencode-<time>.exe   full exe copy taken right before each change
 ```
